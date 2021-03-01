@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        //
+        'http://stock-inventory-monitoring-api.test/teee'
     ];
 }

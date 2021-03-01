@@ -26,7 +26,7 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-
+        event(new \App\Events\HelloEvent());
     }
 
     /**

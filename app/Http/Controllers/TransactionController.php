@@ -70,7 +70,7 @@ class TransactionController extends Controller
                 $transaction->products()->attach($product['Id'],['quantity' => $product['Quantity']]);
             }
         }
-
+        event(new \App\Events\HelloEvent());
         return new TransactionRescource($transaction->loadMissing('client','products'));
     }
 

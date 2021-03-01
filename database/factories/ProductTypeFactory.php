@@ -22,6 +22,7 @@ class ProductTypeFactory extends Factory
     public function definition()
     {
         return [
+            'prefix' => $this->faker->numerify('####'),
             'name' => $this->faker->company,
         ];
     }
