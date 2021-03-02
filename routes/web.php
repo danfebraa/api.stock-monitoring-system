@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/teee', function () {
-    return false;
+Route::get('/teee', function () 
+{
+    event(new \App\Events\HelloEvent(1));
 });

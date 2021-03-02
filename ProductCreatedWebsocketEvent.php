@@ -9,8 +9,11 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Product;
+use App\Http\Resources\ProductResource;
+use Illuminate\Support\Str;
 
-class HelloEvent implements ShouldBroadcast
+class ProductCreatedWebsocketEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**
@@ -18,14 +21,16 @@ class HelloEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+    private $productId;
+    public function __construct($productId)
+    { 
+        $this->productId = $productId;
     }
 
     public function broadcastWith()
     {
-      return ['message' => "NewlyCreated Product"];
+        $product = Product::with(['productType'])->find($this->productId);
+        return collect($product)->transformKeys(fn ($key) => Str::studly($key))->toArray();
     }
 
     /**
@@ -40,6 +45,6 @@ class HelloEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'my-event';
+        return 'product-created-websocket-event';
     }
 }

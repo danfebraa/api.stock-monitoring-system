@@ -45,7 +45,6 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequest $request)
     {
-
         $validated = $request->validated();
         Log::info(json_encode($validated));
         $products = $request->Products;
@@ -55,22 +54,22 @@ class TransactionController extends Controller
         $transaction = Transaction::create($toBeCreated);
         if($transaction->wasRecentlyCreated)
         {
-            foreach($products as $product) {
-                $productLookUp =  Product::findOrFail($product['Id']);
+            foreach($products as $product) 
+            {
+                $productLookUp = Product::find($product['Id']);
                 switch ($transaction->action_type)
                 {
                     case "NewArrival" :
-                        $productLookUp->increment('quantity' , $product['Quantity']);
+                        $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
                         break;
                     case "Delivery" :
-                        $productLookUp->decrement('quantity' , $product['Quantity']);
+                        $productLookUp->update(['quantity'=> $productLookUp->quantity - $product['Quantity']]);
                         break;
                 }
 
-                $transaction->products()->attach($product['Id'],['quantity' => $product['Quantity']]);
+                $transaction->products()->attach($productLookUp->id,['quantity' => $product['Quantity']]);
             }
         }
-        event(new \App\Events\HelloEvent());
         return new TransactionRescource($transaction->loadMissing('client','products'));
     }
 

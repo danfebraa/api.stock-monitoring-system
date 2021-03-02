@@ -11,7 +11,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'products';
-    protected $fillable = ['product_type_id', 'description', 'quantity'];
+    protected $fillable = ['product_type_id','item_code', 'description', 'quantity', 'price'];
 
     public function productType()
     {

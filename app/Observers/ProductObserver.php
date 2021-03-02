@@ -3,18 +3,37 @@
 namespace App\Observers;
 
 use App\Models\Product;
-
+use App\Models\ProductType;
+use App\Events\ProductCreatedWebsocketEvent;
+use App\Events\ProductUpdatedWebsocketEvent;
 class ProductObserver
 {
 
     /**
-     * @param Product $product
-     * @return Product
+     * Handle the Product "creating" event.
+     *
+     * @param  \App\Models\Product  $product
+     * @return $product
      */
     public function creating(Product $product)
     {
-        $description = $product->description;
-        $product->description = $product->productType->prefix."-".$description;
+        
+        $limit_reached = false;
+        $product_type = $product->productType;
+        $product_count = $product_type->products->count();
+        
+        if($product_count > 0)
+        {
+            $limit_reached = $product_count % 100 === 0;
+        }
+            
+        if($limit_reached) 
+        { 
+            $latest_product_type = ProductType::latest()->first();
+            $product_type->update(['prefix' => $latest_product_type->prefix + 100]);
+        }
+
+        $product->item_code = $product_type->prefix + ($product_count + 1);
         return $product;
     }
 
@@ -26,7 +45,7 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        event(new \App\Events\HelloEvent());
+        event(new ProductCreatedWebsocketEvent($product->id));
     }
 
     /**
@@ -37,7 +56,7 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-        //
+        event(new ProductUpdatedWebsocketEvent($product->id));
     }
 
     /**

@@ -20,11 +20,12 @@ class ProductResource extends JsonResource
         return [
             'Id' => $this->id,
             'ProductTypeId' => $this->product_type_id,
+            'ItemCode' => $this->item_code,
             'Description' => $this->description,
             'Quantity' => $this->quantity,
             'ProductType' => new ProductTypeResource($product_type),
             // HasMany
-            'ActionReports' => new ActionReportCollection($this->whenLoaded('actionReports'))
+            'Transactions' => new TransactionCollection($this->whenLoaded('transactions'))
         ];
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductTypeRequest;
 use App\Http\Resources\ProductTypeResource;
 use App\Models\ProductType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class ProductTypeController extends Controller
 {
@@ -27,9 +29,14 @@ class ProductTypeController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(ProductTypeRequest $request)
     {
-        //
+        $valid = $request->only([
+            'Name',
+        ]);
+        $toBeCreated = collect($valid)->transformKeys(fn ($key) => Str::snake($key))->toArray();
+        $productType = ProductType::create($toBeCreated);
+        return new ProductTypeResource($productType);
     }
 
     /**

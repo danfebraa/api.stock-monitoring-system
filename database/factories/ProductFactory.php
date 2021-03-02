@@ -24,9 +24,10 @@ class ProductFactory extends Factory
     {
 
         return [
-            'product_type_id' => rand(1,10),
+            'product_type_id' => 1,
             'description' => $this->faker->buildingNumber,
-            'quantity' => rand(0,1000)
+            'quantity' => rand(0,1000),
+            'price' =>rand(23000,29000)
         ];
     }
 }

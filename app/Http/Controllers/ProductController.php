@@ -39,6 +39,7 @@ class ProductController extends Controller
             'Description',
             'Quantity',
             'ProductTypeId',
+            'Price',
         ]);
         $toBeCreated = collect($valid)->transformKeys(fn ($key) => Str::snake($key))->toArray();
         $product = Product::firstOrCreate($toBeCreated);

@@ -20,8 +20,10 @@ class CreateProductsTable extends Migration
                 ->constrained('product_types')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->bigInteger('item_code');
             $table->string('description');
             $table->integer('quantity');
+            $table->double('price', 8, 2);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ProductRequest extends FormRequest
+class ProductTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,24 +23,18 @@ class ProductRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+        public function rules()
     {
         return [
-            'Description' => 'bail|required|unique:products',
-            'Quantity' => 'bail|required',
-            'ProductTypeId' => 'bail|required|exists:product_types,id',
-            'Price' => 'bail|required',
+            'Name' => 'bail|required|unique:product_types',
+
         ];
     }
 
     public function messages()
     {
         return [
-            'Description.required' => 'A Description is required',
-            'Quantity.required'  => 'Quantity is required',
-            'ProductTypeId.required'  => 'Select one Product Type, it is required',
-            'ProductTypeId.exists'  => 'Produuct type does not exists.',
-            'Price.required'  => 'Quantity is required',
+            'Name.required' => 'A Name is required',
         ];
     }
 
