@@ -29,7 +29,7 @@ class TransactionRequest extends FormRequest
             'Products' => 'bail|required',
             'ClientId' => 'bail|required_if:ActionType,==,Delivery',
             'ActionType' => 'bail|required',
-            'PurchaseOrder' => 'bail|required',
+            'PurchaseOrder' => 'bail|required|unique:transactions,purchase_order',
             'Remarks' => 'bail|sometimes',
         ];
     }
@@ -39,7 +39,8 @@ class TransactionRequest extends FormRequest
             'Products.required' => 'Cannot proceed if no product is selected.',
             'ClientId.required_if' => 'A Client is required when Action Type is set to Delivery',
             'ActionType.required'  => 'Action Type is required',
-            'PurchaseOrder.required'  => 'PurchaseOrder is required',
+            'PurchaseOrder.required'  => 'Purchase Order is required.',
+            'PurchaseOrder.unique'  => 'Purchase Order already exists.',
             'Remarks.required'  => 'Remarks is required',
         ];
     }

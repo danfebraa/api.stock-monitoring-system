@@ -8,7 +8,7 @@ use App\Http\Resources\TransactionCollection;
 use App\Models\Transaction;
 use App\Models\Product;
 
-use App\Events\ProductTransactionCreatedWebsocketEvent;
+use App\Events\ProductAttachedWebsocketEvent;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -46,6 +46,8 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequest $request)
     {
+
+        /*dd("C-".str_pad(100000, 5, 0, STR_PAD_LEFT));*/
         $validated = $request->validated();
         Log::info(json_encode($validated));
         $products = $request->Products;
@@ -55,7 +57,7 @@ class TransactionController extends Controller
         $transaction = Transaction::create($toBeCreated);
         if($transaction->wasRecentlyCreated)
         {
-            foreach($products as $product) 
+            foreach($products as $product)
             {
                 $productLookUp = Product::find($product['Id']);
                 switch ($transaction->action_type)
@@ -72,7 +74,7 @@ class TransactionController extends Controller
             }
             // After attaching all products to the transaction(rows are created), call the event to trigger a websocket,
             // so that all client users will get the update, that there's a new transaction.
-            event(new ProductTransactionCreatedWebsocketEvent($transaction->loadMissing('client','products')));
+            event(new ProductAttachedWebsocketEvent($transaction->loadMissing(['client','products'])));
         }
         return new TransactionResource($transaction->loadMissing(['client','products']));
     }

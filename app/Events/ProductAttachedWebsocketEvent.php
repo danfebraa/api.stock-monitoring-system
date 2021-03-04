@@ -11,26 +11,26 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 
-use App\Models\ProductTransaction;
 use App\Models\Transaction;
 use App\Http\Resources\TransactionResource;
-use Illuminate\Support\Str;
 
-class ProductTransactionCreatedWebsocketEvent implements ShouldBroadcast
+class ProductAttachedWebsocketEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private $transaction;
     /**
      * Create a new event instance.
+     * ProductAttachedWebsocketEvent
      *
+     * ProductAttachedWebsocketEvent
      * @return void
      */
     public function __construct(Transaction $_transaction)
     {
         $this->transaction = $_transaction;
     }
-    
+
     public function broadcastWith()
     {
         $transactionResource = new TransactionResource($this->transaction);
@@ -49,6 +49,6 @@ class ProductTransactionCreatedWebsocketEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'product-transaction-created-websocket-event';
+        return 'product-attached-websocket-event';
     }
 }

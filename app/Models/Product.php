@@ -27,7 +27,7 @@ class Product extends Model
     {
         return $this->belongsToMany(
             'App\Models\Transaction',
-            'product_transaction',
+            'App\Models\ProductTransaction',
             'product_id',
             'transaction_id')
             ->withPivot(['quantity'])

@@ -17,18 +17,18 @@ class ProductObserver
      */
     public function creating(Product $product)
     {
-        
+
         $limit_reached = false;
         $product_type = $product->productType;
         $product_count = $product_type->products->count();
-        
+
         if($product_count > 0)
         {
             $limit_reached = $product_count % 100 === 0;
         }
-            
-        if($limit_reached) 
-        { 
+
+        if($limit_reached)
+        {
             $latest_product_type = ProductType::latest()->first();
             $product_type->update(['prefix' => $latest_product_type->prefix + 100]);
         }
@@ -45,7 +45,7 @@ class ProductObserver
      */
     public function created(Product $product)
     {
-        event(new ProductCreatedWebsocketEvent($product->id));
+        event(new ProductCreatedWebsocketEvent($product->loadMissing('productType')));
     }
 
     /**
@@ -56,7 +56,7 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-        event(new ProductUpdatedWebsocketEvent($product->id));
+        event(new ProductUpdatedWebsocketEvent($product->loadMissing('productType')));
     }
 
     /**

@@ -21,16 +21,16 @@ class ProductCreatedWebsocketEvent implements ShouldBroadcast
      *
      * @return void
      */
-    private $productId;
-    public function __construct($productId)
-    { 
-        $this->productId = $productId;
+    private $product;
+    public function __construct(Product $_product)
+    {
+        $this->product = $_product;
     }
 
     public function broadcastWith()
     {
-        $product = Product::with(['productType'])->find($this->productId);
-        return collect($product)->transformKeys(fn ($key) => Str::studly($key))->toArray();
+        $product = new ProductResource($this->product);
+        return collect($product)->toArray();
     }
 
     /**

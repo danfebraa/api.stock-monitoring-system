@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\ProductTransaction;
-use App\Events\ProductTransactionCreatedWebsocketEvent;
 
 class ProductTransactionObserver
 {
@@ -17,7 +16,7 @@ class ProductTransactionObserver
     {
         $productTransaction = $productTransaction->loadMissing(['transaction.products','transaction.client']);
         $totalAmount = 0;
-        foreach($productTransaction->transaction->products as $p) 
+        foreach($productTransaction->transaction->products as $p)
         {
             $totalAmount += $p->product_transaction->quantity * $p->price;
         }

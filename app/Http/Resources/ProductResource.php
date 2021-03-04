@@ -18,8 +18,9 @@ class ProductResource extends JsonResource
         $quantity = null;
         switch($request->segment(2))
         {
-            case "transactions" : 
-            $quantity = $this->product_transaction->quantity;
+            case "transactions" :
+            // Check used when updating a product's quantity via the transactions endpoint.
+            $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
             break;
             default :
             $quantity = $this->quantity;
