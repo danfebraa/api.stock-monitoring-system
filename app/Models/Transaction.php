@@ -13,7 +13,8 @@ class Transaction extends Model
         'client_id',
         'action_type',
         'purchase_order',
-        'remarks'
+        'remarks',
+        'total_amount'
     ];
     public function client()
     {
@@ -23,10 +24,9 @@ class Transaction extends Model
     {
         return $this->belongsToMany(
             'App\Models\Product',
-            'products_transactions',
+            'App\Models\ProductTransaction',
             'transaction_id',
-            'product_id')
-            ->withPivot(['quantity'])
+            'product_id')->withPivot(['quantity'])
             ->as('product_transaction');
     }
 }

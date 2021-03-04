@@ -9,10 +9,10 @@ class Client extends Model
 {
     use HasFactory;
     protected $table = 'clients';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'address', 'contact_no', 'email', 'contact_person'];
 
-    public function action_reports()
+    public function transactions()
     {
-        return $this->hasMany('App\Models\ActionReport');
+        return $this->hasMany('App\Models\Transaction');
     }
 }

@@ -14,6 +14,6 @@ class TransactionCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return TransactionResource::collection($this->collection);
     }
 }

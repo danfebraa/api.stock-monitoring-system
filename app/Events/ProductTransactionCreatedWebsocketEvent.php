@@ -9,28 +9,32 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Product;
-use App\Http\Resources\ProductResource;
+
+
+use App\Models\ProductTransaction;
+use App\Models\Transaction;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Support\Str;
 
-class ProductCreatedWebsocketEvent implements ShouldBroadcast
+class ProductTransactionCreatedWebsocketEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    private $transaction;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    private $productId;
-    public function __construct($productId)
-    { 
-        $this->productId = $productId;
+    public function __construct(Transaction $_transaction)
+    {
+        $this->transaction = $_transaction;
     }
-
+    
     public function broadcastWith()
     {
-        $product = Product::with(['productType'])->find($this->productId);
-        return collect($product)->transformKeys(fn ($key) => Str::studly($key))->toArray();
+        $transactionResource = new TransactionResource($this->transaction);
+        return collect($transactionResource)->toArray();
     }
 
     /**
@@ -40,11 +44,11 @@ class ProductCreatedWebsocketEvent implements ShouldBroadcast
      */
      public function broadcastOn()
      {
-         return new Channel('product-channel');
+         return new Channel('product-transaction-channel');
      }
 
     public function broadcastAs()
     {
-        return 'product-created-websocket-event';
+        return 'product-transaction-created-websocket-event';
     }
 }

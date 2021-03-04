@@ -8,6 +8,9 @@ use App\Observers\ProductObserver;
 use App\Models\ProductType;
 use App\Observers\ProductTypeObserver;
 
+use App\Models\ProductTransaction;
+use App\Observers\ProductTransactionObserver;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -42,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Product::observe(ProductObserver::class);
+        ProductTransaction::observe(ProductTransactionObserver::class);
         ProductType::observe(ProductTypeObserver::class);
     }
 }

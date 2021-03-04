@@ -6,5 +6,17 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class ProductTransaction extends Pivot
 {
-    protected $fillable = ['action_type', 'quantity', 'remarks'];
+    
+    protected $table = 'product_transaction';
+    protected $fillable = ['product_id','transaction_id','quantity'];
+    
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id');
+    }
+    
+    public function transaction() 
+    {
+        return $this->belongsTo('App\Models\Transaction', 'transaction_id', 'id');
+    }
 }

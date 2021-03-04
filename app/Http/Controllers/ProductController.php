@@ -35,6 +35,7 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        Log::info($request);
         $valid = $request->only([
             'Description',
             'Quantity',

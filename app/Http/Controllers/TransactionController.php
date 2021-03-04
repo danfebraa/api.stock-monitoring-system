@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
-use App\Http\Resources\TransactionRescource;
-use App\Models\Product;
+use App\Http\Resources\TransactionResource;
+use App\Http\Resources\TransactionCollection;
 use App\Models\Transaction;
+use App\Models\Product;
+
+use App\Events\ProductTransactionCreatedWebsocketEvent;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -20,11 +24,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transaction = Transaction::find(13);
-        foreach($transaction->products as $product) {
-            dump($product->product_transaction->quantity);
-        }
-        return response()->json();
+        $transactions = Transaction::with(['client', 'products'])->get();
+        return new TransactionCollection($transactions);
     }
 
     /**
@@ -69,8 +70,11 @@ class TransactionController extends Controller
 
                 $transaction->products()->attach($productLookUp->id,['quantity' => $product['Quantity']]);
             }
+            // After attaching all products to the transaction(rows are created), call the event to trigger a websocket,
+            // so that all client users will get the update, that there's a new transaction.
+            event(new ProductTransactionCreatedWebsocketEvent($transaction->loadMissing('client','products')));
         }
-        return new TransactionRescource($transaction->loadMissing('client','products'));
+        return new TransactionResource($transaction->loadMissing(['client','products']));
     }
 
     /**

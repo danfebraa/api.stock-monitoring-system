@@ -17,8 +17,7 @@ class ClientResource extends JsonResource
     {
         return [
             'Id' => $this->id,
-            'Name' => $this->name,
-            'ActionReports' => new ActionReportCollection($this->whenLoaded('action_reports'))
+            'Name' => $this->name
         ];
     }
 }
