@@ -3,6 +3,7 @@ FROM ubuntu:20.04
 LABEL maintainer="Taylor Otwell"
 
 ARG WWWGROUP
+ARG WWWUSER
 
 WORKDIR /var/www/html
 
@@ -42,8 +43,8 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
-#RUN groupadd --force $WWWGROUP docker
-#RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP 1001 danfebraa
+RUN groupadd --force $WWWGROUP
+RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP $WWWUSER
 
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
