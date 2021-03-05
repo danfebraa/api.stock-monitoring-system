@@ -23,7 +23,7 @@ class TransactionResource extends JsonResource
             'ActionType' => $this->action_type,
             'PurchaseOrder' => $this->purchase_order,
             'Remarks' => $this->remarks,
-            'TotalAmount' => $this->total_amount,
+            'GrandTotal' => $this->grand_total,
             'Client' => new ClientResource($client),
             // HasMany
             'Products' => new ProductCollection($products)

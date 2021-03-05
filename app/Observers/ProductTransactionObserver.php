@@ -14,13 +14,7 @@ class ProductTransactionObserver
      */
     public function created(ProductTransaction $productTransaction)
     {
-        $productTransaction = $productTransaction->loadMissing(['transaction.products','transaction.client']);
-        $totalAmount = 0;
-        foreach($productTransaction->transaction->products as $p)
-        {
-            $totalAmount += $p->product_transaction->quantity * $p->price;
-        }
-        $productTransaction->transaction->update(['total_amount' => $totalAmount]);
+
     }
 
     /**

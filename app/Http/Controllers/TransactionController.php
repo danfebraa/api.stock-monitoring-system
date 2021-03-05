@@ -24,7 +24,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with(['client', 'products'])->get();
+        $transactions = Transaction::with(['client', 'products.productType'])->get();
         return new TransactionCollection($transactions);
     }
 
@@ -46,7 +46,6 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequest $request)
     {
-
         /*dd("C-".str_pad(100000, 5, 0, STR_PAD_LEFT));*/
         $validated = $request->validated();
         Log::info(json_encode($validated));
@@ -57,24 +56,37 @@ class TransactionController extends Controller
         $transaction = Transaction::create($toBeCreated);
         if($transaction->wasRecentlyCreated)
         {
+            $grandTotal = 0;
             foreach($products as $product)
             {
+                $total = 0;
                 $productLookUp = Product::find($product['Id']);
                 switch ($transaction->action_type)
                 {
-                    case "NewArrival" :
+                    case "Return to Whse" :
+                    case "Goods Receipt" :
+                    case "Positive Adjust" :
                         $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
                         break;
-                    case "Delivery" :
+
+                    case "Goods Issue":
+                    case "Return to Supplier" :
+                    case "Negative Adjust" :
                         $productLookUp->update(['quantity'=> $productLookUp->quantity - $product['Quantity']]);
                         break;
                 }
-
-                $transaction->products()->attach($productLookUp->id,['quantity' => $product['Quantity']]);
+                $total += $productLookUp->price* $product['Quantity'];
+                $grandTotal += $total;
+                $transaction->products()->attach($productLookUp->id, [
+                    'quantity' => $product['Quantity'],
+                    'priced_at' => $productLookUp->price,
+                    'total' => $total
+                ]);
             }
+            $transaction->update(['grand_total' => $grandTotal]);
             // After attaching all products to the transaction(rows are created), call the event to trigger a websocket,
             // so that all client users will get the update, that there's a new transaction.
-            event(new ProductAttachedWebsocketEvent($transaction->loadMissing(['client','products'])));
+            event(new ProductAttachedWebsocketEvent($transaction->loadMissing(['client','products.product_transaction', 'products.productType'])));
         }
         return new TransactionResource($transaction->loadMissing(['client','products']));
     }

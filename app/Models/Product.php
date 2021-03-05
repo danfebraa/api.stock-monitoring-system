@@ -30,7 +30,7 @@ class Product extends Model
             'App\Models\ProductTransaction',
             'product_id',
             'transaction_id')
-            ->withPivot(['quantity'])
+            ->withPivot(['quantity', 'priced_at', 'total'])
             ->as('product_transaction');
     }
 }

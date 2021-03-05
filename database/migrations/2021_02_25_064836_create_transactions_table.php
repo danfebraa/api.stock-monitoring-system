@@ -23,7 +23,7 @@ class CreateTransactionsTable extends Migration
             $table->enum('action_type', ['NewArrival', 'Delivery']);
             $table->string('purchase_order')->nullable();
             $table->string('remarks')->nullable();
-            $table->double('total_amount', 8, 2)->nullable();
+            $table->double('grand_total', 8, 2)->nullable();
             $table->timestamps();
         });
     }

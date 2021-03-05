@@ -14,7 +14,7 @@ class Transaction extends Model
         'action_type',
         'purchase_order',
         'remarks',
-        'total_amount'
+        'grand_total'
     ];
     public function client()
     {
@@ -26,7 +26,7 @@ class Transaction extends Model
             'App\Models\Product',
             'App\Models\ProductTransaction',
             'transaction_id',
-            'product_id')->withPivot(['quantity'])
+            'product_id')->withPivot(['quantity', 'priced_at', 'total'])
             ->as('product_transaction');
     }
 }

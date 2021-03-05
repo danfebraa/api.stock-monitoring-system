@@ -16,28 +16,33 @@ class ProductResource extends JsonResource
     public function toArray($request)
     {
         $quantity = null;
+        $price = [];
         switch($request->segment(2))
         {
-            case "transactions" :
-            // Check used when updating a product's quantity via the transactions endpoint.
-            $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
-            break;
-            default :
-            $quantity = $this->quantity;
-            break;
+            case "transactions" : {
+
+                // Check used when updating a product's quantity via the transactions endpoint.
+                $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
+                $price = (!is_null($this->product_transaction))? ['PricedAt' => $this->product_transaction->priced_at, 'Total' => $this->product_transaction->total] : ['Price' => $this->price];
+                break;
+            }
+            default : {
+                $quantity = $this->quantity;
+                $price = ['Price' => $this->price];
+                break;
+            }
         }
         // BelongsTo
         $product_type = $this->whenLoaded('productType');
-        return [
+        return array_merge([
             'Id' => $this->id,
             'ProductTypeId' => $this->product_type_id,
             'ItemCode' => $this->item_code,
             'Description' => $this->description,
             'Quantity' => $quantity,
-            'Price' => $this->price,
             'ProductType' => new ProductTypeResource($product_type),
             // HasMany
             'Transactions' => new TransactionCollection($this->whenLoaded('transactions'))
-        ];
+        ], $price);
     }
 }
