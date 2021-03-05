@@ -42,8 +42,8 @@ RUN apt-get update \
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.0
 
-RUN groupadd --force $WWWGROUP admin
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP 1000 danfebraa
+RUN groupadd --force $WWWGROUP docker
+RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP 1001 danfebraa
 
 COPY start-container /usr/local/bin/start-container
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
