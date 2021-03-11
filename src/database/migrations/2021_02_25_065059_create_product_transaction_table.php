@@ -26,8 +26,11 @@ class CreateProductTransactionTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->integer('quantity')->nullable();
-            $table->double('priced_at', 8, 2)->nullable();
-            $table->double('total', 8, 2)->nullable();
+            // In Dollars
+            $table->decimal('unit_price', 10, 2)->nullable();
+            // Exchange Rate
+            $table->decimal('exchange_rate', 10, 2)->nullable();
+            $table->decimal('total', 10, 2)->nullable();
             $table->timestamps();
         });
     }

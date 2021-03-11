@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ClientCollection;
+use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,7 +17,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::with(['action_reports'])->get();
+        $clients = Client::get();
         return new ClientCollection($clients);
     }
 
@@ -35,11 +36,11 @@ class ClientController extends Controller
      * Display the specified resource.
      *
      * @param Client $client
-     * @return Response
+     * @return ClientResource
      */
     public function show(Client $client)
     {
-        //
+        return new ClientResource($client->loadMissing(['transactions.products.productType']));
     }
 
     /**

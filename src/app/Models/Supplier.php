@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Supplier extends Model
 {
     use HasFactory;
-    protected $table = 'clients';
     protected $fillable = [
-        'client_code',
+        'supplier_code',
         'name',
         'address',
         'contact_no',
         'email',
         'contact_person'
     ];
-
-    public function transactions()
-    {
-        return $this->hasMany('App\Models\Transaction');
-    }
 }

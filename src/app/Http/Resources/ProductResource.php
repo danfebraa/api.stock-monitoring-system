@@ -19,6 +19,7 @@ class ProductResource extends JsonResource
         $price = [];
         switch($request->segment(2))
         {
+            case "clients":
             case "transactions" : {
 
                 // Check used when updating a product's quantity via the transactions endpoint.

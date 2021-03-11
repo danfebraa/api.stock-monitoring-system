@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration
             $table->bigInteger('item_code');
             $table->string('description');
             $table->integer('quantity');
-            $table->double('price', 8, 2);
+            $table->decimal('price', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

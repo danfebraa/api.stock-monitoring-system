@@ -23,7 +23,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with(['productType'])->get();
-        return new ProductCollection($products);
+        return new ProductCollection($products->sortBy('item_code'));
     }
 
 

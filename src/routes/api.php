@@ -23,3 +23,5 @@ Route::apiResource('clients','App\Http\Controllers\ClientController');
 Route::apiResource('transactions','App\Http\Controllers\TransactionController');
 Route::apiResource('product-types','App\Http\Controllers\ProductTypeController');
 Route::apiResource('action-reports','App\Http\Controllers\ActionReportController');
+
+Route::post("login",[\App\Http\Controllers\LoginController::class,'index']);

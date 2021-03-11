@@ -11,22 +11,31 @@ class Transaction extends Model
 
     protected $fillable = [
         'client_id',
+        'supplier_id',
         'action_type',
-        'purchase_order',
+        'ref_doc_number',
         'remarks',
-        'grand_total'
+        'grand_total',
+        'doc_date',
+        'entry_date'
     ];
     public function client()
     {
         return $this->belongsTo('App\Models\Client', 'client_id', 'id');
     }
+
+    public function supplier()
+    {
+        return $this->belongsTo('App\Models\Supplier', 'supplier_id', 'id');
+    }
+
     public function products()
     {
         return $this->belongsToMany(
             'App\Models\Product',
             'App\Models\ProductTransaction',
             'transaction_id',
-            'product_id')->withPivot(['quantity', 'priced_at', 'total'])
+            'product_id')->withPivot(['quantity', 'unit_price', 'exchange_rate','total'])
             ->as('product_transaction');
     }
 }

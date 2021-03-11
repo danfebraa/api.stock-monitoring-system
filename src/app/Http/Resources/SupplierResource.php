@@ -2,22 +2,21 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClientResource extends JsonResource
+class SupplierResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function toArray($request)
     {
         return [
             'Id' => $this->id,
-            'ClientCode' => $this->client_code,
+            'SupplierCode' => $this->supplier_code,
             'Name' => $this->name,
             'Address' => $this->address,
             'Email' => $this->email,

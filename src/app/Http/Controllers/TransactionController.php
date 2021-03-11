@@ -63,7 +63,7 @@ class TransactionController extends Controller
                 $productLookUp = Product::find($product['Id']);
                 switch ($transaction->action_type)
                 {
-                    case "Return to Whse" :
+                    case "Return to Warehouse" :
                     case "Goods Receipt" :
                     case "Positive Adjust" :
                         $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
@@ -99,7 +99,8 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        $transaction = $transaction->loadMissing(['client', 'products.productType']);
+        return new TransactionResource($transaction);
     }
 
     /**

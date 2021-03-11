@@ -2,6 +2,10 @@ version: '3'
 
 networks:
   laravel:
+    driver: bridge
+volumes:
+  dbdata:
+    driver: local
 
 services:
   site:
@@ -24,6 +28,9 @@ services:
   mysql:
     image: 'mysql:8.0'
     container_name: mysql
+    volumes:
+#      - ./mysql:/var/lib/mysql
+      - dbdata:/var/lib/mysql
     restart: unless-stopped
     tty: true
     ports:
