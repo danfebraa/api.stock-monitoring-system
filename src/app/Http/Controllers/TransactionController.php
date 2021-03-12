@@ -74,6 +74,7 @@ class TransactionController extends Controller
                         $total = $exchangeRates->convert($total, 'USD', 'PHP', Carbon::now());
                         $grandTotal += $total;
                         $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
+                        break;
                     }
                     case "Return to Warehouse" :
                     case "Positive Adjust" :
@@ -93,7 +94,7 @@ class TransactionController extends Controller
 
                 $transaction->products()->attach($productLookUp->id, [
                     'quantity' => $product['Quantity'],
-                    'exchange_rate' => $exchangeRates->convert(1, 'USD', 'PHP', Carbon::now()),
+                    'exchange_rate' => ($transaction->action_type == "Goods Receipt")? $exchangeRates->convert(1, 'USD', 'PHP', Carbon::now()) : null,
                     'unit_price' => $product['UnitPrice'],
                     'total' => $total
                 ]);

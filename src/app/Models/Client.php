@@ -17,9 +17,4 @@ class Client extends Model
         'email',
         'contact_person'
     ];
-
-    public function transactions()
-    {
-        return $this->hasMany('App\Models\Transaction');
-    }
 }
