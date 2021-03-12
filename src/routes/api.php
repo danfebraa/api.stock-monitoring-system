@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResource('products','App\Http\Controllers\ProductController');
 Route::apiResource('clients','App\Http\Controllers\ClientController');
+Route::apiResource('suppliers','App\Http\Controllers\SupplierController');
 Route::apiResource('transactions','App\Http\Controllers\TransactionController');
 Route::apiResource('product-types','App\Http\Controllers\ProductTypeController');
 Route::apiResource('action-reports','App\Http\Controllers\ActionReportController');

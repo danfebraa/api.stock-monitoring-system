@@ -17,6 +17,7 @@ class TransactionResource extends JsonResource
     {
         // BelongsTo
         $client = $this->whenLoaded('client');
+        $supplier = $this->whenLoaded('supplier');
         $products = $this->whenLoaded('products');
         return [
             'Id' => $this->id,
@@ -27,10 +28,11 @@ class TransactionResource extends JsonResource
             // Grand Total in Philippine Peso
             'GrandTotal' => $this->grand_total,
             'Client' => new ClientResource($client),
+            'Supplier' => new SupplierResource($supplier),
             // HasMany
             'Products' => new ProductCollection($products),
-            'DocDate' => Carbon::createFromDate($this->doc_date)->format('Y-m-d'),
-            'EntryDate' => Carbon::createFromDate($this->entry_date)->format('Y-m-d'),
+            'DocDate' => Carbon::createFromTimeStamp(strtotime(Carbon::parse($this->doc_date)))->format('Y-m-d'),
+            'EntryDate' => Carbon::createFromTimeStamp(strtotime(Carbon::parse($this->entry_date)))->format('Y-m-d'),
             'CreatedAt' => Carbon::createFromTimeStamp(strtotime($this->created_at))->format('Y-m-d')
         ];
     }

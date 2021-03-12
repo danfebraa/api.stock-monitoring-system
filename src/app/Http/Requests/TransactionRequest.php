@@ -27,10 +27,12 @@ class TransactionRequest extends FormRequest
     {
         return [
             'Products' => 'bail|required',
-            'ClientId' => 'bail|required_if:ActionType,==,Delivery',
+            'ClientId' => 'bail|required_if:ActionType,Return To Return to Warehouse,Goods Issue',
+            'SupplierId' => 'bail|required_if:ActionType,Goods Receipt,Return to Supplier',
             'ActionType' => 'bail|required',
-            /*'PurchaseOrder' => 'bail|required|unique:transactions,purchase_order',*/
-            'PurchaseOrder' => 'bail|required',
+            'RefDocNumber' => 'bail|required|unique:transactions,ref_doc_number',
+            'DocDate' => 'bail|required',
+            'EntryDate' => 'bail|required',
             'Remarks' => 'bail|sometimes',
         ];
     }
@@ -38,11 +40,14 @@ class TransactionRequest extends FormRequest
     {
         return [
             'Products.required' => 'Cannot proceed if no product is selected.',
-            'ClientId.required_if' => 'A Client is required when Action Type is set to Delivery',
+            'ClientId.required_if' => 'A Client is required when Action Type is set to Return To Return to Warehouse or Goods Issue',
+            'SupplierId.required_if' => 'A Supplier is required when Action Type is set to Goods Receipt or Return to Supplier',
             'ActionType.required'  => 'Action Type is required',
-            'PurchaseOrder.required'  => 'Purchase Order is required.',
-            /*'PurchaseOrder.unique'  => 'Purchase Order already exists.',*/
-            'Remarks.required'  => 'Remarks is required',
+            'RefDocNumber.required'  => 'Reference Document Number is required.',
+            'DocDate.required'  => 'Document Date is required.',
+            'EntryDate.required'  => 'Entry Date is required.',
+            'RefDocNumber.unique'  => 'Reference Document Number already exists.',
+            'Remarks.required'  => 'Remarks is required'
         ];
     }
 

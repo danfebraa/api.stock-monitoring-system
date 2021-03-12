@@ -24,7 +24,10 @@ class ProductResource extends JsonResource
 
                 // Check used when updating a product's quantity via the transactions endpoint.
                 $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
-                $price = (!is_null($this->product_transaction))? ['PricedAt' => $this->product_transaction->priced_at, 'Total' => $this->product_transaction->total] : ['Price' => $this->price];
+                $price = (!is_null($this->product_transaction))? [
+                    'UnitPrice' => $this->product_transaction->unit_price,
+                    'ExchangeRate' => $this->product_transaction->exchange_rate,
+                    'Total' => $this->product_transaction->total] : ['Price' => $this->price];
                 break;
             }
             default : {
