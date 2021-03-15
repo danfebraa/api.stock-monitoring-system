@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,11 +13,13 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/teee', function () 
-{
-    event(new \App\Events\HelloEvent(1));
-});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::resource('products', \App\Http\Controllers\Web\ProductController::class);
+Route::resource('clients', \App\Http\Controllers\Web\ClientController::class);
+Route::resource('product-types', \App\Http\Controllers\Web\ProductTypeController::class);
+
+require __DIR__.'/auth.php';

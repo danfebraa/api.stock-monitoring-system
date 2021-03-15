@@ -17,25 +17,11 @@ class ProductResource extends JsonResource
     {
         $quantity = null;
         $price = [];
-        switch($request->segment(2))
-        {
-            case "clients":
-            case "transactions" : {
-
-                // Check used when updating a product's quantity via the transactions endpoint.
-                $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
-                $price = (!is_null($this->product_transaction))? [
-                    'UnitPrice' => $this->product_transaction->unit_price,
-                    'ExchangeRate' => $this->product_transaction->exchange_rate,
-                    'Total' => $this->product_transaction->total] : ['Price' => $this->price];
-                break;
-            }
-            default : {
-                $quantity = $this->quantity;
-                $price = ['Price' => $this->price];
-                break;
-            }
-        }
+        $quantity = (!is_null($this->product_transaction))? $this->product_transaction->quantity : $this->quantity;
+        $price = (!is_null($this->product_transaction))? [
+            'UnitPrice' => $this->product_transaction->unit_price,
+            'ExchangeRate' => $this->product_transaction->exchange_rate,
+            'Total' => $this->product_transaction->total] : ['Price' => $this->price];
         // BelongsTo
         $product_type = $this->whenLoaded('productType');
         return array_merge([

@@ -24,6 +24,27 @@ services:
       - mailhog
     networks:
       - laravel
+  queue:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    container_name: laravel-queue
+    volumes:
+      - ./src:/var/www/html:delegated
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+    depends_on:
+      - site
+    working_dir: /var/www/html
+    entrypoint: ['php', '/var/www/html/artisan']
+    user: danfebraa
+    networks:
+      - laravel
 
   mysql:
     image: 'mysql:8.0'

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Resources\TransactionCollection;
+use App\Jobs\StoreTransactionJob;
 use App\Models\Transaction;
 use App\Models\Product;
 
@@ -49,62 +50,7 @@ class TransactionController extends Controller
      */
     public function store(TransactionRequest $request)
     {
-        /*dd("C-".str_pad(100000, 5, 0, STR_PAD_LEFT));*/
-        $validated = $request->validated();
-        Log::info(json_encode($validated));
-        $products = $request->Products;
-        $valid = Arr::except($validated,['Products']);
-        $valid['DocDate'] = Carbon::parse(Carbon::createFromDate($request['DocDate'])->format('Y-m-d'))->toDate();
-        $valid['EntryDate'] = Carbon::parse(Carbon::createFromDate($request['EntryDate'])->format('Y-m-d'))->toDate();
-        $toBeCreated = collect($valid)->transformKeys(fn ($key) => Str::snake($key))->toArray();
-
-        $transaction = Transaction::create($toBeCreated);
-        if($transaction->wasRecentlyCreated)
-        {
-            $grandTotal = 0;
-            $exchangeRates = new ExchangeRate();
-            foreach($products as $product)
-            {
-                $total = 0;
-                $productLookUp = Product::find($product['Id']);
-                switch ($transaction->action_type)
-                {
-                    case "Goods Receipt" : {
-                        $total += $product['Quantity'] * $product['UnitPrice'];
-                        $total = $exchangeRates->convert($total, 'USD', 'PHP', Carbon::now());
-                        $grandTotal += $total;
-                        $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
-                        break;
-                    }
-                    case "Return to Warehouse" :
-                    case "Positive Adjust" :
-                        $total += $product['Quantity'] * $product['UnitPrice'];
-                        $grandTotal += $total;
-                        $productLookUp->update(['quantity'=> $productLookUp->quantity + $product['Quantity']]);
-                        break;
-
-                    case "Goods Issue":
-                    case "Return to Supplier" :
-                    case "Negative Adjust" :
-                        $total += $product['Quantity'] * $product['UnitPrice'];
-                        $grandTotal += $total;
-                        $productLookUp->update(['quantity'=> $productLookUp->quantity - $product['Quantity']]);
-                        break;
-                }
-
-                $transaction->products()->attach($productLookUp->id, [
-                    'quantity' => $product['Quantity'],
-                    'exchange_rate' => ($transaction->action_type == "Goods Receipt")? $exchangeRates->convert(1, 'USD', 'PHP', Carbon::now()) : null,
-                    'unit_price' => $product['UnitPrice'],
-                    'total' => $total
-                ]);
-            }
-            $transaction->update(['grand_total' => $grandTotal]);
-            // After attaching all products to the transaction(rows are created), call the event to trigger a websocket,
-            // so that all client users will get the update, that there's a new transaction.
-            event(new ProductAttachedWebsocketEvent($transaction->loadMissing(['client', 'supplier','products.product_transaction', 'products.productType'])));
-        }
-        return new TransactionResource($transaction->loadMissing(['client', 'supplier','products']));
+        StoreTransactionJob::dispatch($request);
     }
 
     /**
