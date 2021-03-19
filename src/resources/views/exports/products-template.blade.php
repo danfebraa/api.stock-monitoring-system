@@ -1,0 +1,10 @@
+<table>
+    <thead>
+    <tr>
+        <th>description</th>
+        <th>quantity</th>
+        <th>price</th>
+        <th>product_type</th>
+    </tr>
+    </thead>
+</table>

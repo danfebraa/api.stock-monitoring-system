@@ -33,14 +33,14 @@
         <div>
             <x-label for="email" :value="__('Email')" class="mt-2 mb-2"/>
 
-            <x-input id="email" class="block mt-1 p-2 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <x-input id="email" class="block mt-1 p-2 w-full border-dark" type="email" name="email" :value="old('email')" required autofocus />
         </div>
 
 
         <div>
             <x-label for="contact_person" :value="__('Contact Person')" class="mt-2 mb-2"/>
 
-            <x-input id="contact_person" class="block mt-1 p-2 w-full" type="string" name="contact_person" :value="old('contact_person')" required autofocus />
+            <x-input id="contact_person" class="block mt-1 p-2 w-full border-dark" type="string" name="contact_person" :value="old('contact_person')" required autofocus />
         </div>
 
         <div class="flex items-center justify-end mt-4">

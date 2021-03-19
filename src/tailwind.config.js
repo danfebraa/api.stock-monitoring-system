@@ -18,13 +18,9 @@ module.exports = {
     variants: {
         extend: {
             opacity: ['disabled'],
-            backgroundColor: ['hover', 'focus'],
             tableLayout: ['hover', 'focus'],
         },
     },
 
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('tailwindcss-plugins/pagination'),
-    ],
+    plugins: [require('@tailwindcss/forms')],
 };

@@ -20,17 +20,22 @@
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-
             <!-- Page Content -->
             <main>
                 {{ $slot }}
             </main>
         </div>
+        @livewireScripts
+        <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+        <script>
+            const beamsClient = new PusherPushNotifications.Client({
+                instanceId: 'c67fdeea-30dc-48ef-9b03-2cecbb08e578',
+            });
+
+            beamsClient.start()
+                .then(() => beamsClient.addDeviceInterest('App.User.{{auth()->id()}}'))
+                .then(() => console.log('Successfully registered and subscribed!'))
+                .catch(console.error);
+        </script>
     </body>
 </html>
