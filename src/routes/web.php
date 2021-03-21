@@ -1,6 +1,7 @@
 <?php
 use App\Imports\ProductsImport;
 use App\Jobs\ExcelUploadProductsJob;
+use App\Models\ProductType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,13 @@ use Maatwebsite\Excel\Facades\Excel;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', function(){
+    $productType = ProductType::find(1);
+    dd(ProductType::latest('created_at')->first());
+    dd($productType->products->count() % 100);
+});
+
 Route::get('/notify', function(){
     $user = User::find(1);
     $user->notify(new \App\Notifications\ProductsUploaded());

@@ -17,7 +17,6 @@ class ProductObserver
      */
     public function creating(Product $product)
     {
-
         $limit_reached = false;
         $product_type = $product->productType;
         $product_count = $product_type->products->count();
@@ -33,15 +32,14 @@ class ProductObserver
             $product_type->update(['prefix' => $latest_product_type->prefix + 100]);
         }
 
-        $product->item_code = $product_type->prefix + ($product_count + 1);
-        return $product;
+        $product->item_code = (int) $product_type->prefix + ($product_count + 1);
     }
 
     /**
      * Handle the Product "created" event.
      *
-     * @param  \App\Models\Product  $product
-     * @return void
+     * @param \App\Models\Product $product
+     * @return bool
      */
     public function created(Product $product)
     {
